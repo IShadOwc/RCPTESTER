@@ -261,8 +261,7 @@ $result = mysqli_query($conn, $query);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Administratora</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="ETA-logo.jpg" type="image/x-icon"> 
+    <link rel="stylesheet" href="styl.css">
 </head>
 <body>
 <nav class="navbar">
@@ -289,36 +288,49 @@ $result = mysqli_query($conn, $query);
                 </svg>
             </button>
         <script>
-            function toggleTheme() {
-            const body = document.body;
-            body.classList.toggle('dark-theme');
-            const currentTheme = body.classList.contains('dark-theme') ? 'dark' : 'light';
-            localStorage.setItem('theme', currentTheme);
-            setCookie('theme', currentTheme, 30); // Save theme in a cookie for 30 days
+// Funkcja do ustawienia motywu
+function setTheme(theme) {
+    const body = document.body;
+    const themePath = document.getElementById('theme-path');
 
-            // Update SVG path based on theme
-            const themePath = document.getElementById('theme-path');
-            if (currentTheme === 'dark') {
-                themePath.setAttribute('d', 'M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Zm0-80q88 0 158-48.5T740-375q-20 5-40 8t-40 3q-123 0-209.5-86.5T364-660q0-20 3-40t8-40q-78 32-126.5 102T200-480q0 116 82 198t198 82Zm-10-270Z');
-            } else {
-                themePath.setAttribute('d', 'M480-360q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Zm0 80q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Zm326-268Z');
-            }
-            }
+    if (theme === 'dark') {
+        body.classList.add('dark-theme');
+        themePath.setAttribute('d', 'M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Zm0-80q88 0 158-48.5T740-375q-20 5-40 8t-40 3q-123 0-209.5-86.5T364-660q0-20 3-40t8-40q-78 32-126.5 102T200-480q0 116 82 198t198 82Zm-10-270Z');
+        localStorage.setItem('theme', 'dark');
+        setCookie('theme', 'dark', 30);
+    } else {
+        body.classList.remove('dark-theme');
+        themePath.setAttribute('d', 'M480-360q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Zm0 80q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Zm326-268Z');
+        localStorage.setItem('theme', 'light');
+        setCookie('theme', 'light', 30);
+    }
+}
 
-            // Apply saved theme on page load
-            document.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = getCookie('theme') || localStorage.getItem('theme');
-            const body = document.body;
-            const themePath = document.getElementById('theme-path');
+// Funkcja do przełączania motywu
+function toggleTheme() {
+    const html = document.documentElement;  // Wybieramy element <html>
+    const currentTheme = html.getAttribute('data-theme'); // Pobieramy aktualny motyw
+    
+    // Przełączamy między motywami (jeśli jest "dark", ustawiamy "light", w przeciwnym razie "dark")
+    if (currentTheme === 'dark') {
+        html.setAttribute('data-theme', 'light');  // Zmiana na motyw jasny
+    } else {
+        html.setAttribute('data-theme', 'dark');   // Zmiana na motyw ciemny
+    }
+    
+    // Opcjonalnie: Zapisujemy wybrany motyw w localStorage, żeby był zachowany po odświeżeniu strony
+    localStorage.setItem('theme', html.getAttribute('data-theme'));
+}
 
-            if (savedTheme === 'dark') {
-                body.classList.add('dark-theme');
-                themePath.setAttribute('d', 'M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Zm0-80q88 0 158-48.5T740-375q-20 5-40 8t-40 3q-123 0-209.5-86.5T364-660q0-20 3-40t8-40q-78 32-126.5 102T200-480q0 116 82 198t198 82Zm-10-270Z');
-            } else {
-                themePath.setAttribute('d', 'M480-360q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Zm0 80q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Zm326-268Z');
-            }
-            });
-        </script>
+// Przy ładowaniu strony sprawdzamy, jaki motyw był zapisany w localStorage
+window.onload = function() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    }
+};
+
+</script>
         <button id="font-toggle" onclick="toggleFontSize()" style="background: none; border: none; padding: 0; cursor: pointer;">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1f1f1f">
                 <path d="M660-240v-248l-64 64-56-56 160-160 160 160-56 56-64-64v248h-80Zm-540 0 165-440h79l165 440h-76l-39-113H236l-40 113h-76Zm139-177h131l-65-182h-4l-62 182Z"/>
@@ -389,6 +401,13 @@ $result = mysqli_query($conn, $query);
         </script>
         </div>
     </nav>
+    <!-- Sidebar button-->
+    <button id="toggle-sidebar" aria-label="Toggle Sidebar">
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
+    <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/>
+  </svg>
+</button>
+<div id="sidebar-overlay"></div>
 
     <div class="container">
         <div class="sidebar">
@@ -453,16 +472,16 @@ $result = mysqli_query($conn, $query);
                             $result = mysqli_query($conn, $query);
                             while ($row = mysqli_fetch_assoc($result)) {
                                 echo "<tr>
-                                    <td>{$row['id']}</td>
-                                    <td>{$row['user_id']}</td>
-                                    <td>{$row['username']}</td>
-                                    <td>{$row['action']}</td>
-                                    <td>{$row['table_name']}</td>
-                                    <td>{$row['record_id']}</td>
-                                    <td>{$row['details']}</td>
-                                    <td>{$row['timestamp']}</td>
+                                    <td data-label='ID'>{$row['id']}</td>
+                                    <td data-label='ID użytkownika'>{$row['user_id']}</td>
+                                    <td data-label='Nazwa użytkownika'>{$row['username']}</td>
+                                    <td data-label='Akcja'>{$row['action']}</td>
+                                    <td data-label='Nazwa tabeli'>{$row['table_name']}</td>
+                                    <td data-label='ID rekordu'>{$row['record_id']}</td>
+                                    <td data-label='Szczegóły'>{$row['details']}</td>
+                                    <td data-label='Znacznik czasu'>{$row['timestamp']}</td>
                                 </tr>";
-                            }
+                                }
                             ?>
                         </tbody>
                     </table>
@@ -717,5 +736,32 @@ $result = mysqli_query($conn, $query);
             </div>
         </div>
     </div>
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const toggleSidebarBtn = document.getElementById('toggle-sidebar');
+  const sidebar = document.querySelector('.sidebar');
+  const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+  toggleSidebarBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('active');
+    sidebarOverlay.classList.toggle('active');
+
+    // Obsługa przesunięcia przycisku tylko na PC/Tablet
+    if (window.innerWidth > 767) {
+      toggleSidebarBtn.style.left = sidebar.classList.contains('active') ? '230px' : '10px';
+    }
+  });
+
+  sidebarOverlay.addEventListener('click', () => {
+    sidebar.classList.remove('active');
+    sidebarOverlay.classList.remove('active');
+
+    if (window.innerWidth > 767) {
+      toggleSidebarBtn.style.left = '10px';
+    }
+  });
+});
+
+</script>
 </body>
 </html>
